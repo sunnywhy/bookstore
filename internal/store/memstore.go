@@ -29,3 +29,27 @@ func (ms *MemStore) Create(book *mystore.Book) error {
 	ms.books[book.Id] = &newBook
 	return nil
 }
+
+func (ms *MemStore) Update(book *mystore.Book) error {
+	ms.Lock()
+	defer ms.Unlock()
+
+	oldBook, ok := ms.books[book.Id]
+	if !ok {
+		return mystore.ErrNotFound
+	}
+
+	newBook := *oldBook
+	if book.Name != "" {
+		newBook.Name = book.Name
+	}
+	if book.Authors != nil {
+		newBook.Authors = book.Authors
+	}
+	if book.Press != "" {
+		newBook.Press = book.Press
+	}
+
+	ms.books[book.Id] = &newBook
+	return nil
+}
