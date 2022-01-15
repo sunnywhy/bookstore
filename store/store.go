@@ -1,5 +1,12 @@
 package store
 
+import "errors"
+
+var (
+	ErrExist = errors.New("exist")
+	ErrNotFound = errors.New("not found")
+)
+
 type Book struct {
 	Id      string   `json:"id"`
 	Name    string   `json:"name"`
