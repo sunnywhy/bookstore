@@ -53,3 +53,14 @@ func (ms *MemStore) Update(book *mystore.Book) error {
 	ms.books[book.Id] = &newBook
 	return nil
 }
+
+func (ms *MemStore) Get(id string) (mystore.Book, error) {
+	ms.RLock()
+	defer ms.RUnlock()
+
+	t, ok := ms.books[id]
+	if ok {
+		return *t, nil
+	}
+	return mystore.Book{}, mystore.ErrNotFound
+}
