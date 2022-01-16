@@ -64,3 +64,26 @@ func (ms *MemStore) Get(id string) (mystore.Book, error) {
 	}
 	return mystore.Book{}, mystore.ErrNotFound
 }
+
+func(ms *MemStore) Delete(id string) error {
+	ms.Lock()
+	defer ms.Unlock()
+
+	if _, ok := ms.books[id]; !ok {
+		return mystore.ErrNotFound
+	}
+
+	delete(ms.books, id)
+	return nil
+}
+
+func (ms *MemStore) GetAll() ([]mystore.Book, error) {
+	ms.RLock()
+	defer ms.RUnlock()
+
+	allBooks := make([]mystore.Book, 0, len(ms.books))
+	for _, book := range ms.books {
+		allBooks = append(allBooks, *book)
+	}
+	return allBooks, nil
+}
