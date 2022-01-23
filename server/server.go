@@ -96,7 +96,7 @@ func (bs *BookStoreServer) updateBookHandler(w http.ResponseWriter, req *http.Re
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	
+
 	book.Id = id
 	if err := bs.s.Update(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -106,11 +106,26 @@ func (bs *BookStoreServer) updateBookHandler(w http.ResponseWriter, req *http.Re
 }
 
 func (bs *BookStoreServer) getAllBookHandler(w http.ResponseWriter, req *http.Request) {
-	
+	books, err := bs.s.GetAll()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	response(w, books)
 }
 
 func (bs *BookStoreServer) delBookHandler(w http.ResponseWriter, req *http.Request) {
+	id, ok := mux.Vars(req)["id"]
+	if !ok {
+		http.Error(w, "no id found in request", http.StatusBadRequest)
+		return
+	}
 
+	err := bs.s.Delete(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 func response(w http.ResponseWriter, v interface{}) {
