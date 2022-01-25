@@ -56,9 +56,9 @@ func (bs *BookStoreServer) Shutdown(ctx context.Context) error {
 }
 
 func (bs *BookStoreServer) createBookHandler(w http.ResponseWriter, req *http.Request){
-	decode := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body)
 	var book store.Book
-	if err := decode.Decode(&book); err != nil {
+	if err := decoder.Decode(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -90,9 +90,9 @@ func (bs *BookStoreServer) updateBookHandler(w http.ResponseWriter, req *http.Re
 		return
 	}
 
-	dec := json.NewDecoder(req.Body)
+	decoder := json.NewDecoder(req.Body)
 	var book store.Book
-	if err := dec.Decode(&book); err != nil {
+	if err := decoder.Decode(&book); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
